@@ -1,29 +1,25 @@
-import time
-import random
+import requests
 from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+import re
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+}
 
 def get_top_50_asins(bsr_url):
-    options = Options()
-    options.add_argument("--headless")
-    driver = webdriver.Chrome(options=options)
-    driver.get(bsr_url)
-    time.sleep(3)
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-    driver.quit()
+    response = requests.get(bsr_url, headers=HEADERS)
+    soup = BeautifulSoup(response.text, "html.parser")
     links = soup.select("a.a-link-normal[href*='/dp/']")
-    asins = list({link['href'].split('/dp/')[1].split('/')[0] for link in links})
+    asins = list({link['href'].split('/dp/')[1].split('/')[0] for link in links if '/dp/' in link['href']})
     return asins[:50]
 
 def extract_rufus_questions(asin):
-    options = Options()
-    options.add_argument("--headless")
-    driver = webdriver.Chrome(options=options)
     url = f"https://www.amazon.com/dp/{asin}"
-    driver.get(url)
-    time.sleep(4)
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-    driver.quit()
-    q_elements = soup.find_all("div", string=lambda x: x and "?" in x)
-    return [el.get_text(strip=True) for el in q_elements]
+    try:
+        response = requests.get(url, headers=HEADERS, timeout=10)
+        soup = BeautifulSoup(response.text, "html.parser")
+        elements = soup.find_all(string=re.compile(r"\?$"))
+        questions = [q.strip() for q in elements if 30 <= len(q.strip()) <= 180]
+        return questions
+    except:
+        return []
