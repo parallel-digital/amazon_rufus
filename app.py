@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from scraper import get_top_50_asins, extract_rufus_questions
+from io import BytesIO
 
 st.title("Amazon Rufus Question Scraper")
 bsr_url = st.text_input("Paste Amazon Best Seller URL:", 
@@ -18,4 +19,13 @@ if st.button("Run Scrape"):
     df = pd.DataFrame(unique_questions, columns=["Rufus Question"])
     st.success(f"Extracted {len(unique_questions)} unique questions.")
     st.dataframe(df)
-    st.download_button("Download Excel", df.to_excel(index=False), "rufus_questions.xlsx")
+    from io import BytesIO
+
+    output = BytesIO()
+    df.to_excel(output, index=False, engine='openpyxl')
+    st.download_button(
+        label="Download Excel",
+        data=output.getvalue(),
+        file_name="rufus_questions.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
