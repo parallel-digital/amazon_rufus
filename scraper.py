@@ -39,9 +39,3 @@ def extract_rufus_data(asin):
     except Exception as e:
         print(f"[{asin}] Exception: {e}")
         return []
-import time
-
-for asin in asins:
-    rows = extract_rufus_data(asin)
-    all_rows.extend(rows)
-    time.sleep(1.5)  # 1.5 seconds between requests
