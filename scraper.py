@@ -30,6 +30,5 @@ def extract_rufus_data(asin):
         questions = [span.get_text(strip=True) for span in question_spans if span.get_text(strip=True)]
 
         return [(asin, title, q) for q in questions]
-    except Exception as e:
-        print(f"[{asin}] Exception: {e}")
+    except
         return []
