@@ -17,18 +17,31 @@ def extract_rufus_data(asin):
     url = f"https://www.amazon.com/dp/{asin}"
     try:
         response = requests.get(url, headers=HEADERS, timeout=10)
+
+        if response.status_code != 200:
+            print(f"[{asin}] Response status: {response.status_code}")
+            return []
+
         soup = BeautifulSoup(response.text, "html.parser")
 
         title_tag = soup.find("span", id="productTitle")
         title = title_tag.get_text(strip=True) if title_tag else "N/A"
 
-        rufus_container = soup.find("div", id="dpx-nice-widget-container")
-        if not rufus_container:
+        container = soup.find("div", id="dpx-nice-widget-container")
+        if not container:
+            print(f"[{asin}] Rufus container not found.")
             return []
 
-        question_spans = rufus_container.select("span > button > span")
+        question_spans = container.select("span > button > span")
         questions = [span.get_text(strip=True) for span in question_spans if span.get_text(strip=True)]
 
         return [(asin, title, q) for q in questions]
-    except:
+    except Exception as e:
+        print(f"[{asin}] Exception: {e}")
         return []
+import time
+
+for asin in asins:
+    rows = extract_rufus_data(asin)
+    all_rows.extend(rows)
+    time.sleep(1.5)  # 1.5 seconds between requests
