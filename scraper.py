@@ -13,13 +13,18 @@ def get_top_50_asins(bsr_url):
     asins = list({link['href'].split('/dp/')[1].split('/')[0] for link in links if '/dp/' in link['href']})
     return asins[:50]
 
-def extract_rufus_questions(asin):
+def extract_rufus_data(asin):
     url = f"https://www.amazon.com/dp/{asin}"
     try:
         response = requests.get(url, headers=HEADERS, timeout=10)
         soup = BeautifulSoup(response.text, "html.parser")
-        elements = soup.find_all(string=re.compile(r"\?$"))
-        questions = [q.strip() for q in elements if 30 <= len(q.strip()) <= 180]
-        return questions
+
+        title_tag = soup.find("span", id="productTitle")
+        title = title_tag.get_text(strip=True) if title_tag else "N/A"
+
+        question_tags = soup.find_all(string=re.compile(r"\?$"))
+        questions = [q.strip() for q in question_tags if 30 <= len(q.strip()) <= 180]
+
+        return [(asin, title, q) for q in questions]
     except:
         return []

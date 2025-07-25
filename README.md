@@ -1,17 +1,15 @@
-# Streamlit Rufus Scraper (Cloud-Compatible)
+# Rufus Scraper (ASIN | Title | Question Format)
 
-This app pulls 'Ask Rufus' questions from the top 50 ASINs on any Amazon Best Seller page.
+This app pulls 'Ask Rufus' questions from the top 50 ASINs of an Amazon BSR URL and outputs a table with:
+- ASIN
+- Product Title
+- Rufus Question
 
 ## Setup
-
-Install dependencies:
 ```
 pip install -r requirements.txt
-```
-
-Run locally:
-```
 streamlit run app.py
 ```
 
-Deploy to Streamlit Cloud using `app.py` as the entry point.
+## Deploy on Streamlit Cloud
+Use `app.py` as the entry point.
