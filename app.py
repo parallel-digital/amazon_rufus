@@ -4,7 +4,7 @@ from scraper import get_top_50_asins, extract_rufus_data
 from io import BytesIO
 
 st.title("Amazon Rufus Question Scraper v2")
-bsr_url = st.text_input("Paste Amazon Best Seller URL: updated", 
+bsr_url = st.text_input("Paste Amazon Best Seller URL:", 
     "https://www.amazon.com/Best-Sellers-Patio-Lawn-Garden-Patio-Furniture-Cushions-Pads/zgbs/lawn-garden/553788")
 
 if st.button("Run Scrape"):
