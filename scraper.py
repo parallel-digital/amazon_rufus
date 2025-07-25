@@ -22,8 +22,12 @@ def extract_rufus_data(asin):
         title_tag = soup.find("span", id="productTitle")
         title = title_tag.get_text(strip=True) if title_tag else "N/A"
 
-        question_tags = soup.find_all(string=re.compile(r"\?$"))
-        questions = [q.strip() for q in question_tags if 30 <= len(q.strip()) <= 180]
+        rufus_container = soup.find("div", id="dpx-nice-widget-container")
+        if not rufus_container:
+            return []
+
+        question_spans = rufus_container.select("span > button > span")
+        questions = [span.get_text(strip=True) for span in question_spans if span.get_text(strip=True)]
 
         return [(asin, title, q) for q in questions]
     except:

@@ -1,9 +1,8 @@
-# Rufus Scraper (ASIN | Title | Question Format)
+# Rufus Scraper with Targeted Extraction
 
-This app pulls 'Ask Rufus' questions from the top 50 ASINs of an Amazon BSR URL and outputs a table with:
-- ASIN
-- Product Title
-- Rufus Question
+This app pulls 'Ask Rufus' questions from top 50 ASINs using the exact container where questions are located:
+- Extracts questions from <div id="dpx-nice-widget-container">
+- Outputs ASIN, Product Title, and Rufus Questions
 
 ## Setup
 ```
@@ -12,4 +11,4 @@ streamlit run app.py
 ```
 
 ## Deploy on Streamlit Cloud
-Use `app.py` as the entry point.
+Use app.py as entry point.
